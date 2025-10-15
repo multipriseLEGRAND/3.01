@@ -1,27 +1,6 @@
-# Redirige HTTP vers HTTPS
-server {
-    listen 80;
-    server_name _;
-    return 301 https://$host$request_uri;
-}
+sudo mkdir -p /etc/ssl/localcerts
 
-# HTTPS local avec certificat auto-signé
-server {
-    listen 443 ssl;
-    server_name _;
-
-    ssl_certificate /etc/ssl/localcerts/django-selfsigned.crt;
-    ssl_certificate_key /etc/ssl/localcerts/django-selfsigned.key;
-
-    # Chemin vers les fichiers statiques
-    location /static/ {
-        alias /home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/Serv_web/staticfiles/;
-    }
-
-    # Proxy vers Django
-    location / {
-        include proxy_params;
-        proxy_pass http://unix:/run/django.sock;
-    }
-}
-
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+-keyout /etc/ssl/localcerts/django-selfsigned.key \
+-out /etc/ssl/localcerts/django-selfsigned.crt \
+-subj "/C=FR/ST=IDF/L=Paris/O=SAE301/OU=Dev/CN=raspberrypi.local"
