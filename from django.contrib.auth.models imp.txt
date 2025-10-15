@@ -1,67 +1,162 @@
-Exception in thread django-main-thread:
-Traceback (most recent call last):
-  File "/usr/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
-    self.run()
-  File "/usr/lib/python3.11/threading.py", line 975, in run
-    self._target(*self._args, **self._kwargs)
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/utils/autoreload.py", line 64, in wrapper
-    fn(*args, **kwargs)
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
-    self.check(**check_kwargs)
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/core/management/base.py", line 492, in check
-    all_issues = checks.run_checks(
-                 ^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/core/checks/registry.py", line 89, in run_checks
-    new_errors = check(app_configs=app_configs, databases=databases)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/core/checks/urls.py", line 16, in check_url_config
-    return check_resolver(resolver)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/core/checks/urls.py", line 26, in check_resolver
-    return check_method()
-           ^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/urls/resolvers.py", line 531, in check
-    for pattern in self.url_patterns:
-                   ^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/utils/functional.py", line 47, in __get__
-    res = instance.__dict__[self.name] = self.func(instance)
-                                         ^^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/urls/resolvers.py", line 718, in url_patterns
-    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
-                       ^^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/utils/functional.py", line 47, in __get__
-    res = instance.__dict__[self.name] = self.func(instance)
-                                         ^^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
-    return import_module(self.urlconf_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1206, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1178, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1149, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/Serv_web/Serv_web/urls.py", line 22, in <module>
-    path('', include('prises.urls')),
-             ^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/lib/python3.11/site-packages/django/urls/conf.py", line 39, in include
-    urlconf_module = import_module(urlconf_module)
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1206, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1178, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1149, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/Serv_web/prises/urls.py", line 2, in <module>
-    from . import views
-  File "/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/Serv_web/prises/views.py", line 64, in <module>
-    @user_passes_test(is_controle)
-                      ^^^^^^^^^^^
-NameError: name 'is_controle' is not defined
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, HttpResponseForbidden
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.utils.dateparse import parse_time
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import authenticate, login, logout
+
+from .models import Prise, Temperature
+from .mqtt_client import envoyer_commande_prise, envoyer_commande_toutes_les_leds
+
+
+# --- RBAC (Gestion des rôles utilisateurs) ---
+def is_controle(user):
+    """Vérifie si l'utilisateur appartient au groupe 'controle_leds'."""
+    return user.is_authenticated and user.groups.filter(name='controle_leds').exists()
+
+
+def is_controle_or_temp_viewer(user):
+    """Vérifie si l'utilisateur a accès à la température (controleur ou viewer)."""
+    return user.is_authenticated and (
+        user.groups.filter(name='controle_leds').exists()
+        or user.groups.filter(name='temperature_viewer').exists()
+    )
+
+
+# --- Authentification / Connexion ---
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("page_accueil")
+        messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
+    return render(request, "prises/login.html")
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+
+# --- Page principale : contrôle LEDs / horaires ---
+@login_required
+@user_passes_test(is_controle)
+def page_accueil(request):
+    prises = Prise.objects.all().order_by("id")
+    temp = Temperature.objects.first()
+    return render(
+        request,
+        "prises/page_accueil.html",
+        {"prises": prises, "temperature": temp.value if temp else "--"},
+    )
+
+
+# --- API JSON : états des LEDs ---
+@login_required
+@user_passes_test(is_controle)
+def etat_prise_api(request):
+    data = [
+        {
+            "id": p.id,
+            "nom": p.nom,
+            "etat": bool(p.etat),
+            "horaire_active": bool(p.horaire_active),
+            "heure_on": p.heure_on.strftime("%H:%M") if p.heure_on else None,
+            "heure_off": p.heure_off.strftime("%H:%M") if p.heure_off else None,
+        }
+        for p in Prise.objects.all().order_by("id")
+    ]
+    return JsonResponse(data, safe=False)
+
+
+# --- API JSON : température ---
+@login_required
+@user_passes_test(is_controle_or_temp_viewer)
+def temperature_api(request):
+    temp_obj = Temperature.objects.first()
+    return JsonResponse({"temperature": temp_obj.value if temp_obj else "--"})
+
+
+# --- Page dédiée à la température ---
+@login_required
+@user_passes_test(is_controle_or_temp_viewer)
+def page_temperature(request):
+    temp_obj = Temperature.objects.first()
+    return render(
+        request,
+        "prises/page_temperature.html",
+        {"temperature": temp_obj.value if temp_obj else "--"},
+    )
+
+
+# --- Commande ON/OFF d'une prise ---
+@login_required
+@user_passes_test(is_controle)
+def set_prise_state(request, prise_id, etat):
+    prise = get_object_or_404(Prise, pk=prise_id)
+    etat = etat.lower()
+    if etat not in ("on", "off"):
+        messages.error(request, "Commande inconnue.")
+        return redirect("page_accueil")
+    ok = envoyer_commande_prise(prise.id, etat)
+    if ok:
+        prise.etat = (etat == "on")
+        prise.save(update_fields=["etat"])
+        messages.success(request, f"{prise.nom} -> {etat.upper()}")
+    else:
+        messages.error(request, "Échec de l'envoi MQTT.")
+    return redirect("page_accueil")
+
+
+# --- Définir les plages horaires ---
+@login_required
+@user_passes_test(is_controle)
+@require_POST
+def set_horaire(request, prise_id):
+    prise = get_object_or_404(Prise, pk=prise_id)
+    heure_on_str = request.POST.get("heure_on", "").strip()
+    heure_off_str = request.POST.get("heure_off", "").strip()
+    active = request.POST.get("horaire_active") == "on"
+    heure_on = parse_time(heure_on_str) if heure_on_str else None
+    heure_off = parse_time(heure_off_str) if heure_off_str else None
+
+    prise.heure_on = heure_on
+    prise.heure_off = heure_off
+    prise.horaire_active = active
+    prise.save(update_fields=["heure_on", "heure_off", "horaire_active"])
+    messages.success(request, f"Plage horaire enregistrée pour {prise.nom}.")
+    return redirect("page_accueil")
+
+
+# --- Bouton global : allumer / éteindre toutes les LEDs ---
+@login_required
+@user_passes_test(is_controle)
+def toggle_all_leds(request):
+    try:
+        prises = list(Prise.objects.all())
+        target_on = not all(p.etat for p in prises)
+        cmd = "on" if target_on else "off"
+        ok = envoyer_commande_toutes_les_leds(cmd)
+        if ok:
+            for p in prises:
+                p.etat = target_on
+                p.save(update_fields=["etat"])
+            messages.success(request, "LEDs mises à jour.")
+        else:
+            messages.error(request, "Échec envoi MQTT global.")
+    except Exception as e:
+        messages.error(request, f"Erreur interne commande globale : {e}")
+    return redirect("page_accueil")
+
+
+# --- Vérification manuelle des plages horaires ---
+@login_required
+@user_passes_test(is_controle)
+def debug_check_plages(request):
+    from .tache_horaire import verifier_plages
+    verifier_plages()
+    return JsonResponse({"ok": True})
