@@ -1,16 +1,13 @@
-[Unit]
-Description=Django SAE301 Gunicorn
-After=network.target
+server {
+    listen 80;
+    server_name clta.com;
 
-[Service]
-User=pi
-Group=www-data
-WorkingDirectory=/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/Serv_web
-Environment="DJANGO_SETTINGS_MODULE=Serv_web.settings"
-Environment="DJANGO_DEBUG=False"
-Environment="DJANGO_ALLOWED_HOSTS=ton-domaine.com,127.0.0.1,localhost"
-Environment="DJANGO_START_BACKGROUND_WORKERS=True"
-ExecStart=/home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/venv/bin/gunicorn --workers 3 --bind unix:/run/django.sock Serv_web.wsgi:application
+    location /static/ {
+        alias /home/clta/Documents/SAE301-RBAC-check/SAE301-main-inspect/SAE301-main/PythonProject/PythonProject/Serv_web/staticfiles/;
+    }
 
-[Install]
-WantedBy=multi-user.target
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/django.sock;
+    }
+}
