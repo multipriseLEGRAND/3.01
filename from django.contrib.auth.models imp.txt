@@ -1,0 +1,27 @@
+from django.contrib.auth.models import User, Group
+
+# 1) Créer (ou récupérer) les groupes
+g1, _ = Group.objects.get_or_create(name='controle_leds')
+g2, _ = Group.objects.get_or_create(name='temperature_viewer')
+
+# 2) Créer (ou récupérer) les utilisateurs
+u1, created = User.objects.get_or_create(username='controleur', defaults={'is_staff': True})
+if created:
+    u1.set_password('1234'); u1.save()
+else:
+    u1.set_password('1234'); u1.save()  # force le mot de passe si tu relances
+
+u2, created = User.objects.get_or_create(username='capteur')
+if created:
+    u2.set_password('1234'); u2.save()
+else:
+    u2.set_password('1234'); u2.save()
+
+# 3) Assigner les groupes
+g1.user_set.add(u1)
+g2.user_set.add(u2)
+
+# 4) Vérifier
+print("Groupes existants :", list(Group.objects.values_list('name', flat=True)))
+print("controleur ->", list(u1.groups.values_list('name', flat=True)))
+print("capteur ->", list(u2.groups.values_list('name', flat=True)))
